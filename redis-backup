@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Set the backup directory and file names
+BACKUP_DIR="/path/to/backup/directory"
+RDB_FILE="redis.rdb"
+AOF_FILE="appendonly.aof"
+
+# Create the backup directory if it doesn't exist
+if [ ! -d "$BACKUP_DIR" ]; then
+  mkdir -p "$BACKUP_DIR"
+fi
+
+# Backup the RDB file
+redis-cli SAVE
+cp "/var/lib/redis/$RDB_FILE" "$BACKUP_DIR/$RDB_FILE-$(date +%Y-%m-%d-%H-%M-%S)"
+
+# Backup the AOF file
+redis-cli BGREWRITEAOF
+cp "/var/lib/redis/$AOF_FILE" "$BACKUP_DIR/$AOF_FILE-$(date +%Y-%m-%d-%H-%M-%S)"
