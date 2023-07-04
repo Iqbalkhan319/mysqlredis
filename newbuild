@@ -1,0 +1,11 @@
+# Stage 1: Build the app
+FROM node:16-alpine as builder
+WORKDIR /app
+COPY . .
+RUN npm ci
+RUN npm run build
+
+# Stage 2: Create the production image
+FROM scratch
+COPY --from=builder /app/dist /app
+CMD [ "npm", "run", "prod" ]
